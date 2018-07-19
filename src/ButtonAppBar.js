@@ -15,13 +15,32 @@ import WorkIcon from '@material-ui/icons/Navigation';
 import DateIcon from '@material-ui/icons/DateRange';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper/Paper'
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import HomeIcon from '@material-ui/icons/Home';
+import AccountIcon from '@material-ui/icons/Person';
+import AccountBalanceWallet from '@material-ui/icons/AccountBalanceWallet';
+import Trips from '@material-ui/icons/Favorite';
+import GridList from '@material-ui/core/GridList'
+import { GridListTile } from '../node_modules/@material-ui/core';
+import image from "./banner.jpg";
+// import RobotoLight from 'typeface-roboto/'
 const styles = theme => ({
     appbar:{
         backgroundColor:'#464646'
     },
+    bottomNavigation:{
+        bottom:0,
+        width:'100%',
+        // height:'fit-content',
+        position:'fixed',
+        backgroundColor:'white'
+    },
     root: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.paper
+        height:'100%',
+        // position:'relative',
+        backgroundColor:'#f8f8fa' //theme.palette.background.paper
       },
       flex: {
         flexGrow: 1,
@@ -56,21 +75,56 @@ const styles = theme => ({
         alignContent: 'center',
         alignItems: 'center',
         width:"90%"
-        
       },
       listItem:{
+          hidden:'true',
+          outerHeight:20,
+          
       },
       fromToStyle:{
-        fontSize:18,
-        color:'darkgray'
+        fontSize:18
+      },
+      gridList: {
+        justifyContent: 'flex-start',
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
+      },
+      gridListTile:{
+        height:'fit-content',
+      },
+      img:{
+          justifyContent: 'space-around',
+          height:100
       }
   });
-// const styles = theme =>({
-  
-// )};
+const tileData = [
+    {
+        img: image,
+    },
+    {
+        img: image,
+    },
+    {
+        img: image,
+    },
+    {
+        img: image,
+    }
+];
 
-function ButtonAppBar(props) {
-  const { classes } = props;
+// function ButtonAppBar(props) {
+class ButtonAppBar extends React.Component {
+        state = {
+          value: 0,
+        };
+      
+        handleChange = (event, value) => {
+          this.setState({ value });
+        };
+        render() {
+   const { classes } = this.props;
+   const { value } = this.state;
   return (
     <div className={classes.root}>
       <AppBar className = {classes.appbar} position="static">
@@ -88,27 +142,27 @@ function ButtonAppBar(props) {
 
     {/* <Card>
     <CardContent> */}
-    <Paper className={classes.paper} square="true" >
-          <List>
-              <ListItem >
-                <IconButton>
-                    <ImageIcon/>
-                </IconButton>
-                <ListItemText>
-                <Typography className={classes.fromToStyle}>From</Typography>
-                </ListItemText>
-              </ListItem>
-              <Divider inset component="li"/>
-            <ListItem className={classes.listItem}>
+    <Paper className={classes.paper} square>
+          <List disablePadding>
+              <ListItem>
                 <IconButton>
                     <WorkIcon/>
                 </IconButton>
                 <ListItemText>
-                <Typography className={classes.fromToStyle}>To</Typography>
+                <Typography variant= 'caption' className={classes.fromToStyle}>Leaving From</Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider component="li"/>
+            <ListItem className={classes.listItem}>
+                <IconButton>
+                    <ImageIcon/>
+                </IconButton>
+                <ListItemText>
+                <Typography variant= 'caption' className={classes.fromToStyle}>Going To</Typography>
                     
                 </ListItemText>
             </ListItem>
-            <Divider inset component="li"/>
+            <Divider component="li"/>
             <ListItem className={classes.listItem}>
                 <IconButton>
                     <DateIcon/>
@@ -116,7 +170,7 @@ function ButtonAppBar(props) {
                 <ListItemText className = {classes.dateStyle}>
                 <Typography className={classes.dateStyle}>30</Typography>
                 </ListItemText>
-                <ListItemText alignContent = "left" primary="ThursDay" secondary="Aug,2018"/>
+                <ListItemText alignContent= "left" primary="ThursDay" secondary="Aug,2018"/>
             </ListItem>
             {/* <Paper className={classes.paper2} elevation='0'>
             <IconButton className={classes.twoway}>
@@ -130,36 +184,35 @@ function ButtonAppBar(props) {
           <Button className = {classes.button} variant="contained" color = "primary">
           Search
           </Button>
-          {/* </CardContent>
-          </Card> */}
 
 
-      {/* <List>
-        <ListItem>
-          <IconButton>
-            <ImageIcon />
-          </IconButton>
-          <ListItemText primary="Photos" secondary="Jan 9, 2014" />
-        </ListItem>
-        <li>
-          <Divider inset />
-        </li>
-        <ListItem>
-          <IconButton>
-            <WorkIcon />
-          </IconButton>
-          <ListItemText primary="Work" secondary="Jan 7, 2014" />
-        </ListItem>
-        <Divider inset component="li" />
-        <ListItem>
-          <IconButton>
-            <BeachAccessIcon />
-          </IconButton>
-          <ListItemText primary="Vacation" secondary="July 20, 2014" />
-        </ListItem>
-      </List> */}
+        <GridList className={classes.gridList} cols={1.8}>
+                {tileData.map(tile=>(
+                <GridListTile className = {classes.gridListTile} key={tile.img} >
+                {/* <Paper> */}
+                <img className = {classes.img} src={tile.img} alt={tile.title} />
+                {/* </Paper> */}
+                )}
+                 </GridListTile>
+                ))}
+        </GridList>
+    <Paper className={classes.paper}>
+      <BottomNavigation
+        value={value}
+        onChange={this.handleChange}
+        showLabels
+        className={classes.bottomNavigation}
+
+      >
+        <BottomNavigationAction label="Home" icon={<HomeIcon />} />
+        <BottomNavigationAction label="Account" icon={<AccountIcon />} />
+        <BottomNavigationAction label="Abhicash" icon={<AccountBalanceWallet />} />
+        <BottomNavigationAction label="Trips" icon={<Trips />} />
+      </BottomNavigation>
+      </Paper>
     </div>
   );
+}
 }
 ButtonAppBar.propTypes = {
     classes: PropTypes.object.isRequired,
